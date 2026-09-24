@@ -37,7 +37,7 @@ ROUTE_SCHEMA = {
         "confidence": {"type": "integer", "minimum": 0, "maximum": 100},
         "reason": {"type": "string"},
         "language": {"type": "string", "enum": ["ru", "kk", "mixed"]},
-        "reply_language": {"type": "string", "enum": ["ru", "kk"]},
+        "reply_language": {"type": "string", "enum": ["ru", "kk", "mixed"]},
         "alternative_ids": {"type": "array", "items": {"type": "string", "enum": list(SCENARIOS)}, "minItems": 0, "maxItems": 3},
         "missing_slots": {"type": "array", "items": {"type": "string"}},
         "topic_switched": {"type": "boolean"},
@@ -57,7 +57,7 @@ def route_conversation(history: list[dict[str, str]]) -> tuple[dict[str, object]
 Select exactly one scenario from the catalog for the customer's CURRENT request. The conversation may mix Russian and Kazakh.
 Use dialogue context, but switch scenarios when the customer changes topic. Carefully apply not_this_if boundaries.
 Return JSON only following the supplied schema. Confidence is your calibrated 0-100 estimate; alternatives must be plausible competing scenarios.
-Set reply_language to the language of the customer's final complete phrase or final sentence: kk when it ends in Kazakh, ru when it ends in Russian. Never return mixed for reply_language.
+Set language and reply_language from the customer's latest message, not just its final word or sentence. Use ru for Russian-only requests, kk for Kazakh-only requests, and mixed when the request contains both languages. A mixed request must receive a natural mixed-language reply.
 SCENARIO CATALOG: {ROUTING_CATALOG}"""
     started = perf_counter()
     try:

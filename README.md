@@ -1,107 +1,134 @@
 # AI Helpdesk
 
-<p align="center">
-  <strong>Голосовой AI-ассистент для современного контакт-центра</strong><br>
-  Помогает клиенту быстро решить вопрос, а супервизору — видеть весь путь диалога.
-</p>
+<p align="center">A polished, self-hosted customer support dashboard powered by FastAPI, SQLite, and the OpenAI API.</p>
 
-<p align="center">
-  <a href="#что-умеет">Возможности</a> ·
-  <a href="#как-пользоваться">Как пользоваться</a> ·
-  <a href="#быстрый-старт">Запуск</a>
-</p>
+<p align="center"><a href="#quick-start">Quick start</a> · <a href="#api">API</a> · <a href="#development">Development</a></p>
 
-![AI Helpdesk — voice-first customer support](docs/images/hero-banner.png)
+![AI Helpdesk hero banner](docs/images/hero-banner-v2.png)
 
-<p align="center">
-  <sub>Голос · Текст · Русский · Қазақша · Контроль качества</sub>
-</p>
+## Overview
 
-## Один разговор — понятный результат
+AI Helpdesk is a compact, production-minded portfolio project for teams that want a clean support experience without a heavy frontend stack. It provides a premium dark dashboard, a persistent AI chat, and a documented REST API.
 
-**AI Helpdesk** — рабочее пространство для клиентской поддержки. Клиент может говорить или писать так, как ему удобно; ассистент понимает русскую речь, казахскую речь и естественное переключение между ними. Он отвечает на языке, которым завершён запрос, и помогает не потерять контекст, когда тема меняется прямо во время разговора.
+## Interface
 
-Для команды поддержки это не просто чат: в интерфейсе остаётся прозрачная история обращения, выбранный путь решения и показатели качества каждого ответа.
+![AI Helpdesk live conversation dashboard](docs/images/dashboard-conversation-v2.png)
 
-## Интерфейс
+## Features
 
-![AI Helpdesk dashboard preview](docs/images/dashboard-preview.png)
+- Responsive premium SaaS dashboard built with vanilla HTML, CSS, and JavaScript.
+- Conversation history persisted locally in SQLite.
+- OpenAI-powered replies using the official Python SDK and Responses API.
+- Friendly validation and error messages when input, connectivity, or configuration needs attention.
+- New conversations, health checks, Swagger documentation, Docker Compose, and API tests.
 
-## Что умеет
+## Tech stack
 
-| | Возможность | Польза |
-| :--: | --- | --- |
-| 🎙️ | Голосовой и текстовый диалог | Клиент выбирает привычный способ обращения. |
-| 🌐 | Русский, қазақша и смешанная речь | Не нужно переключать язык интерфейса перед разговором. |
-| ↪️ | Переключение темы в диалоге | Новый вопрос обрабатывается без потери предыдущего контекста. |
-| 🔊 | Ответ голосом | Диалог ощущается естественно и не заставляет читать длинные сообщения. |
-| ✦ | Трассировка обращения | Супервизор видит, какое решение выбрано, почему и за какое время. |
-| 📈 | Аналитика качества | Можно оценить скорость ответа, полезность и проблемные диалоги. |
+| Area | Technology |
+| --- | --- |
+| API | Python, FastAPI, Uvicorn |
+| AI | Official OpenAI Python SDK, Responses API |
+| Data | SQLite |
+| Frontend | HTML, CSS, JavaScript |
+| Testing | Pytest, FastAPI TestClient |
+| Delivery | Docker, Docker Compose |
 
-## Как это работает для клиента
+## Project structure
 
-![Customer conversation flow](docs/images/customer-flow.svg)
-
-1. Откройте AI Helpdesk и войдите в свой аккаунт.
-2. Нажмите кнопку микрофона и разрешите доступ к нему — или просто напишите вопрос в поле ввода.
-3. Говорите естественно, на русском, қазақша или смешивая языки. Например: «Кеше төледім, бірақ тапсырыс расталмады».
-4. Ассистент сразу покажет ответ и озвучит его. Если вопрос меняется, продолжайте тот же разговор — новый диалог создавать не требуется.
-5. Оцените ответ кнопкой «Да» или «Нет». Это помогает команде замечать сложные обращения.
-
-## Для супервизора
-
-Откройте раздел **«Трассировка диалога»**, чтобы увидеть транскрипт, выбранный маршрут, уровень уверенности, альтернативные варианты и задержку на каждом этапе. В разделе **«Аналитика»** собраны показатели по диалогам: скорость, оценки клиентов и доля решённых обращений.
-
-## Быстрый старт
-
-### 1. Подготовьте настройки
-
-Создайте `.env` из шаблона и добавьте свой ключ OpenAI:
-
-```powershell
-Copy-Item .env.example .env
+```text
+.
+├── backend/             # FastAPI routes, OpenAI service, SQLite access
+├── frontend/            # Responsive dashboard UI
+├── tests/               # API tests
+├── docs/                # Architecture notes and visual assets
+├── .env.example         # Safe environment-variable template
+├── Dockerfile
+├── docker-compose.yml
+└── requirements.txt
 ```
 
-Откройте `.env` и укажите:
+## Quick start
+
+### Docker
+
+```bash
+cp .env.example .env
+# Add your OpenAI API key to .env
+docker compose up --build
+```
+
+Open [http://localhost:8000](http://localhost:8000). API docs are available at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### Local development
+
+```bash
+python -m venv venv
+# Windows PowerShell
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+uvicorn backend.main:app --reload
+```
+
+## Environment configuration
+
+Create `.env` from `.env.example` and add a key created in your OpenAI account:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=gpt-4o-mini
 ```
 
-> Никогда не публикуйте `.env` и настоящий ключ в GitHub.
+The server reads credentials only from environment variables. If the key is missing, `/api/chat` returns a clear `503` response while the dashboard and health endpoint remain available. The implementation follows the official OpenAI Python SDK pattern for `client.responses.create`; see the [OpenAI API quickstart](https://developers.openai.com/api/docs/quickstart).
 
-### 2. Запустите через Docker
+## API
 
-```powershell
-docker compose up --build
+### `GET /health`
+
+```json
+{ "status": "ok" }
 ```
 
-Откройте [http://localhost:8000](http://localhost:8000).
+### `POST /api/chat`
 
-### Или запустите локально
-
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-uvicorn backend.main:app --reload
+```bash
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"How do I update my billing details?"}'
 ```
 
-После запуска приложение будет доступно по адресу [http://localhost:8000](http://localhost:8000).
+```json
+{
+  "conversation_id": "b7a23c69-5531-4bdf-9ece-1bb71fb20e1c",
+  "reply": "..."
+}
+```
 
-## Первые 60 секунд
+`POST /api/conversations` creates an empty conversation. `GET /api/dashboard` returns lightweight local dashboard metrics. Explore all routes at `/docs`.
 
-1. Зарегистрируйте профиль на стартовом экране.
-2. Нажмите **«Новый диалог»**.
-3. Спросите голосом или текстом: «Как поменять адрес доставки?»
-4. Послушайте ответ, затем откройте **«Трассировка диалога»** и посмотрите путь обращения.
+## Development
 
-## Конфиденциальность
+```bash
+pytest
+```
 
-Ключ доступа хранится только в локальном файле `.env`, который исключён из Git. История разговоров привязана к аккаунту пользователя. Перед публикацией проекта обязательно убедитесь, что `.env` не попал в коммит.
+The SQLite database is created automatically at `data/helpdesk.db`. It is intentionally excluded from Git.
 
-## Лицензия
+## Security
 
-Проект распространяется по лицензии [MIT](LICENSE).
+- Never commit `.env` or a real API key.
+- `.env.example` contains placeholders only.
+- The API key stays on the server; the browser never receives it.
+- OpenAI requests use `store=False`, and the application keeps local conversation history in SQLite.
+
+## Future improvements
+
+- Authentication and workspace-level authorization.
+- Streaming responses and agent handoff rules.
+- Knowledge-base retrieval with citations.
+- Conversation list, filtering, and export.
+- Observability, rate limiting, and deployment automation.
+
+## License
+
+Distributed under the [MIT License](LICENSE).

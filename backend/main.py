@@ -44,7 +44,7 @@ alternatives, rationale and timing are shown to a supervisor in Conversation tra
 If the customer asks "what are you?", "what product is this?", "what do you represent?", or equivalent,
 introduce yourself as AI Helpdesk's virtual assistant and explain that you help route and resolve insurance requests.
 
-Be concise, warm, and practical. Reply in the user's language. Never invent policy data, payment results, claim status,
+Be concise, warm, and practical. Match the user's language: Russian-only requests get Russian replies, Kazakh-only requests get Kazakh replies, and Russian/Kazakh mixed requests get naturally mixed replies. Never determine reply language solely from the last word or sentence. Never invent policy data, payment results, claim status,
 or actions that were not actually completed."""
 
 
@@ -95,7 +95,8 @@ def generate_ai_reply(history: list[dict[str, str]], user: dict[str, str], scena
                          f"Purpose: {scenario['description']}\nRequired slots: {scenario['slots']['required']}\n"
                          f"Scenario actions: {scenario['actions']}\nUse this scenario's opening response as guidance: {scenario['responses']}\n"
                          f"The signed-in customer is {user['name']} ({user['email']}). If they ask who they are, identify them using these account details only.\n"
-                         f"Reply strictly in {'Kazakh' if scenario.get('reply_language') == 'kk' else 'Russian'}, based on the final sentence of the customer message.",
+                         f"Reply language: {scenario['reply_language']}. Use Russian only for ru, Kazakh only for kk, and natural Russian/Kazakh code-switching for mixed.\n"
+                         "If the customer asks what you can do, introduce yourself and briefly list the insurance requests you can help route: buying or renewing a policy, price calculation, payment, claims, policy details and contacting an operator. Do not ask 'When is convenient?' for this question.",
             input=history,
             store=False,
         )
@@ -282,11 +283,10 @@ def chat(payload: ChatRequest, user: dict[str, str] = Depends(current_user)) -> 
     history = [{"role": item["role"], "content": item["content"]} for item in get_messages(conversation_id)]
     decision, routing_latency_ms = route_conversation(history)
     scenario = dict(selected_scenario(str(decision["scenario_id"])))
-    scenario["reply_language"] = decision["reply_language"]
-    record_route(conversation_id, user["id"], decision, routing_latency_ms)
     reply_language = str(decision["reply_language"])
-    response_templates = scenario["responses"].get(reply_language, scenario["responses"]["ru"])
-    reply = response_templates["opening"]
+    scenario["reply_language"] = reply_language
+    record_route(conversation_id, user["id"], decision, routing_latency_ms)
+    reply = generate_ai_reply(history, user, scenario)
     latency_ms = round((perf_counter() - started_at) * 1000)
     assistant_message_id = save_message(conversation_id, "assistant", reply)
     record_ai_response(assistant_message_id, conversation_id, user["id"], latency_ms)

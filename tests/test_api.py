@@ -27,6 +27,7 @@ def test_registration_and_session_profile(tmp_path, monkeypatch):
 def test_chat_persists_messages_for_signed_in_user(tmp_path, monkeypatch):
     monkeypatch.setattr("backend.database.DATABASE_PATH", tmp_path / "test.db")
     monkeypatch.setattr("backend.main.route_conversation", lambda history: ({"scenario_id": "SC30", "confidence": 92, "reason": "Payment issue", "language": "ru", "reply_language": "ru", "alternative_ids": ["SC31"], "missing_slots": [], "topic_switched": False}, 220))
+    monkeypatch.setattr("backend.main.generate_ai_reply", lambda history, user, scenario: "Чем могу помочь по страховке?")
     with TestClient(app) as client:
         register(client)
         response = client.post("/api/chat", json={"message": "Who am I?"})
