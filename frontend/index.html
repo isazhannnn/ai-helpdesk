@@ -12,25 +12,27 @@
       <aside class="sidebar" id="sidebar">
         <a class="brand" href="/"><span class="brand-icon">✦</span><span>AI Helpdesk</span></a>
         <nav aria-label="Main navigation">
-          <a class="nav-item active" href="#dashboard"><span>▦</span><b>Dashboard</b></a>
-          <a class="nav-item" href="#chat"><span>◌</span><b>Chats</b></a>
-          <a class="nav-item" href="#knowledge"><span>◇</span><b>Knowledge Base</b></a>
-          <a class="nav-item" href="#analytics"><span>⌁</span><b>Analytics</b></a>
+          <button class="nav-item active" data-view="dashboard"><span>▦</span><b>Dashboard</b></button>
+          <button class="nav-item" data-view="chats"><span>◌</span><b>Chats</b></button>
+          <button class="nav-item" data-view="knowledge"><span>◇</span><b>Knowledge Base</b></button>
+          <button class="nav-item" data-view="analytics"><span>⌁</span><b>Analytics</b></button>
+          <button class="nav-item" data-view="trace"><span>⟡</span><b>Conversation trace</b></button>
         </nav>
-        <a class="nav-item settings" href="#settings"><span>⚙</span><b>Settings</b></a>
+        <button class="nav-item settings" data-view="settings"><span>⚙</span><b>Settings</b></button>
         <div class="upgrade-card"><span>✦</span><strong>Pro workspace</strong><p>Built for teams that care about every reply.</p><button>Manage plan</button></div>
       </aside>
 
-      <main class="main" id="dashboard">
+      <main class="main">
+        <section class="view active" id="dashboard-view">
         <header class="topbar">
           <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
-          <div><p class="kicker">THURSDAY, OCT 24</p><h1>Good morning, Alex <span>✦</span></h1></div>
+          <div><p class="kicker">YOUR SUPPORT WORKSPACE</p><h1 id="greeting">Welcome back <span>✦</span></h1></div>
           <div class="top-actions"><label class="search"><span>⌕</span><input placeholder="Search conversations" /></label><button class="icon-button" aria-label="Notifications">♧<i></i></button><button class="avatar" aria-label="Profile">AS</button></div>
         </header>
 
         <section class="welcome-card">
           <div class="orb orb-one"></div><div class="orb orb-two"></div>
-          <div class="welcome-copy"><span class="pill">● AI ASSISTANT ONLINE</span><h2>Turn every question into a great customer experience.</h2><p>Your assistant is ready to handle routine conversations while your team focuses on what matters.</p><button class="primary-button" id="startChat">Start a conversation <span>→</span></button></div>
+          <div class="welcome-copy"><span class="pill">● AI ASSISTANT ONLINE</span><h2>Every insurance request, on the right route.</h2><p>The AI assistant understands Russian, Kazakh, context shifts, and competing insurance scenarios.</p><button class="primary-button" id="startChat">Start a conversation <span>→</span></button></div>
           <div class="welcome-visual" aria-hidden="true"><div class="signal s1"></div><div class="signal s2"></div><div class="signal s3"></div><div class="assistant-orb">✦</div></div>
         </section>
 
@@ -47,16 +49,24 @@
             <div class="messages" id="messages" aria-live="polite">
               <div class="empty-state"><div>✦</div><h3>Start a meaningful conversation</h3><p>Ask anything about an order, account, or product. Your conversation is saved securely on this device.</p></div>
             </div>
-            <form class="composer" id="chatForm"><textarea id="messageInput" rows="1" maxlength="4000" placeholder="Message AI Assistant…" aria-label="Message"></textarea><button type="submit" id="sendButton" aria-label="Send message"><span>↑</span></button></form>
-            <p class="disclaimer">AI can make mistakes. Verify important information before acting on it.</p>
+            <form class="composer" id="chatForm"><button class="voice-button" type="button" id="voiceButton" aria-label="Start voice input" title="Speak your message">◉</button><textarea id="messageInput" rows="1" maxlength="4000" placeholder="Speak or type an insurance request…" aria-label="Message"></textarea><button class="speak-button active" type="button" id="speakButton" aria-label="Toggle AI voice" title="AI voice is on">⌁</button><button type="submit" id="sendButton" aria-label="Send message"><span>↑</span></button></form>
+            <p class="disclaimer">AI can make mistakes. Verify important information before acting on it. Voice replies are AI-generated.</p>
           </article>
           <aside class="right-rail">
-            <article class="profile-card"><div class="profile-top"><span class="avatar large">AS</span><button aria-label="More actions">•••</button></div><h3>Alex Smith</h3><p>Support manager · Acme Inc.</p><div class="profile-stats"><span><b>24</b>Open</span><span><b>92%</b>CSAT</span><span><b>4.9</b>Rating</span></div></article>
+            <article class="profile-card"><div class="profile-top"><span class="avatar large" id="profileInitials">—</span><button aria-label="More actions">•••</button></div><h3 id="profileName">Your profile</h3><p id="profileEmail">Sign in to personalize your workspace</p><div class="profile-stats"><span><b>24</b>Open</span><span><b>92%</b>CSAT</span><span><b>4.9</b>Rating</span></div></article>
             <article class="activity-card" id="knowledge"><header><div><span class="eyebrow">KNOWLEDGE BASE</span><h3>Content health</h3></div><span class="health">● Healthy</span></header><div class="progress-row"><div><span>Articles indexed</span><b>128 / 128</b></div><div class="progress"><i></i></div></div><div class="activity-divider"></div><p class="recent-label">RECENT ACTIVITY</p><ul><li><span class="activity-dot blue-dot"></span><p><b>AI assistant activated</b><small>Ready to answer customer questions</small></p><time>Now</time></li><li><span class="activity-dot violet-dot"></span><p><b>Knowledge base synced</b><small>128 articles are available</small></p><time>2h</time></li></ul></article>
           </aside>
         </section>
+        </section>
+
+        <section class="view secondary-view" id="chats-view"><header class="view-header"><span class="eyebrow">CONVERSATIONS</span><h2>Your recent chats</h2><button class="primary-button" id="newConversationList">New conversation <span>→</span></button></header><div class="conversation-list" id="conversationList"></div></section>
+        <section class="view secondary-view" id="knowledge-view"><header class="view-header"><span class="eyebrow">KNOWLEDGE BASE</span><h2>Help content that keeps getting smarter</h2><p>Articles are ready for your assistant to use when responding to customers.</p></header><div class="feature-grid"><article><span>◈</span><h3>Getting started</h3><p>18 articles · Updated today</p><button>Browse collection →</button></article><article><span>◒</span><h3>Billing & plans</h3><p>24 articles · Healthy</p><button>Browse collection →</button></article><article><span>⌁</span><h3>Product guides</h3><p>86 articles · Synced</p><button>Browse collection →</button></article></div></section>
+        <section class="view secondary-view" id="analytics-view"><header class="view-header"><span class="eyebrow">RESPONSE ANALYTICS</span><h2>Did AI help, and how quickly?</h2><p>Speed is measured automatically. Helpfulness comes from real customer feedback.</p></header><div class="analytics-grid" id="analyticsSummary"></div><div class="chart-card"><div class="chart-heading"><b>Conversation activity</b><span>Live response quality</span></div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="chart-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div><div class="response-analysis"><div><span class="eyebrow">RECENT AI RESPONSES</span><h3>Quality by conversation</h3></div><div id="responseAnalysisList"></div></div></section>
+        <section class="view secondary-view trace-view" id="trace-view"><header class="view-header"><span class="eyebrow">EXPLAINABILITY</span><h2>Conversation trace</h2><p>See how a request moved through the support system, from private context to the final AI response.</p></header><div class="trace-toolbar"><label>Choose a conversation<select id="traceSelect"><option value="">Select a conversation</option></select></label><span class="trace-safe">● Private by design</span></div><div class="trace-empty" id="traceEmpty"><span>⟡</span><h3>Select a conversation</h3><p>The route, data boundaries, and completed processing steps will appear here.</p></div><div class="trace-result" id="traceResult" hidden><article class="trace-summary"><span class="trace-status">● Completed</span><p class="trace-question-label">LATEST CUSTOMER QUESTION</p><h3 id="traceQuestion">—</h3><p id="traceMeta">—</p><div class="route-decision" id="routeDecision"></div></article><div class="trace-flow" id="traceFlow"></div><article class="explain-card"><span>✦ Why this is safe</span><p id="traceExplanation"></p></article></div></section>
+        <section class="view secondary-view" id="settings-view"><header class="view-header"><span class="eyebrow">ACCOUNT SETTINGS</span><h2>Personal workspace</h2><p>Your profile is used only to personalize your own support conversations.</p></header><div class="settings-card"><div class="settings-identity"><span class="avatar large" id="settingsInitials">—</span><div><b id="settingsName">Your name</b><span id="settingsEmail">—</span></div></div><button class="logout-button" id="logoutButton">Sign out</button></div></section>
       </main>
     </div>
+    <div class="auth-overlay" id="authOverlay"><div class="auth-card"><span class="brand-icon">✦</span><p class="eyebrow">WELCOME TO AI HELPDESK</p><h2 id="authTitle">Create your workspace</h2><p class="auth-copy" id="authCopy">A few details are all we need to personalize your AI support assistant.</p><form id="authForm"><label id="nameField">Your name<input id="authName" required minlength="2" maxlength="60" placeholder="e.g. Amina Karim" /></label><label>Email<input id="authEmail" required type="email" placeholder="you@company.com" /></label><label>Password<input id="authPassword" required type="password" minlength="8" placeholder="At least 8 characters" /></label><p class="auth-error" id="authError" role="alert"></p><button class="primary-button auth-submit" type="submit">Create account <span>→</span></button></form><button class="auth-switch" id="authSwitch">Already have an account? Sign in</button></div></div>
     <script src="/static/app.js"></script>
   </body>
 </html>
