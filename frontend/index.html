@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <title>AI Helpdesk — Customer support, elevated</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="/"><span class="brand-icon">✦</span><span>AI Helpdesk</span></a>
+        <nav aria-label="Main navigation">
+          <a class="nav-item active" href="#dashboard"><span>▦</span><b>Dashboard</b></a>
+          <a class="nav-item" href="#chat"><span>◌</span><b>Chats</b></a>
+          <a class="nav-item" href="#knowledge"><span>◇</span><b>Knowledge Base</b></a>
+          <a class="nav-item" href="#analytics"><span>⌁</span><b>Analytics</b></a>
+        </nav>
+        <a class="nav-item settings" href="#settings"><span>⚙</span><b>Settings</b></a>
+        <div class="upgrade-card"><span>✦</span><strong>Pro workspace</strong><p>Built for teams that care about every reply.</p><button>Manage plan</button></div>
+      </aside>
+
+      <main class="main" id="dashboard">
+        <header class="topbar">
+          <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+          <div><p class="kicker">THURSDAY, OCT 24</p><h1>Good morning, Alex <span>✦</span></h1></div>
+          <div class="top-actions"><label class="search"><span>⌕</span><input placeholder="Search conversations" /></label><button class="icon-button" aria-label="Notifications">♧<i></i></button><button class="avatar" aria-label="Profile">AS</button></div>
+        </header>
+
+        <section class="welcome-card">
+          <div class="orb orb-one"></div><div class="orb orb-two"></div>
+          <div class="welcome-copy"><span class="pill">● AI ASSISTANT ONLINE</span><h2>Turn every question into a great customer experience.</h2><p>Your assistant is ready to handle routine conversations while your team focuses on what matters.</p><button class="primary-button" id="startChat">Start a conversation <span>→</span></button></div>
+          <div class="welcome-visual" aria-hidden="true"><div class="signal s1"></div><div class="signal s2"></div><div class="signal s3"></div><div class="assistant-orb">✦</div></div>
+        </section>
+
+        <section class="metric-grid" aria-label="Support metrics">
+          <article class="metric-card"><div class="metric-icon blue">◌</div><div><span>Total conversations</span><strong id="conversationCount">—</strong><small>All time</small></div></article>
+          <article class="metric-card"><div class="metric-icon violet">✦</div><div><span>Resolved by AI</span><strong id="resolvedCount">—</strong><small class="positive">● Running smoothly</small></div></article>
+          <article class="metric-card"><div class="metric-icon amber">◷</div><div><span>Waiting for agent</span><strong id="waitingCount">—</strong><small>Queue is clear</small></div></article>
+          <article class="metric-card"><div class="metric-icon green">↯</div><div><span>Avg. response time</span><strong id="responseTime">—</strong><small>Across all conversations</small></div></article>
+        </section>
+
+        <section class="workspace">
+          <article class="chat-card" id="chat">
+            <header class="card-heading"><div><span class="eyebrow">LIVE CONVERSATION</span><h2>AI Assistant</h2></div><div class="chat-status"><i></i> Available</div><button class="new-chat" id="newConversation">＋ New dialog</button></header>
+            <div class="messages" id="messages" aria-live="polite">
+              <div class="empty-state"><div>✦</div><h3>Start a meaningful conversation</h3><p>Ask anything about an order, account, or product. Your conversation is saved securely on this device.</p></div>
+            </div>
+            <form class="composer" id="chatForm"><textarea id="messageInput" rows="1" maxlength="4000" placeholder="Message AI Assistant…" aria-label="Message"></textarea><button type="submit" id="sendButton" aria-label="Send message"><span>↑</span></button></form>
+            <p class="disclaimer">AI can make mistakes. Verify important information before acting on it.</p>
+          </article>
+          <aside class="right-rail">
+            <article class="profile-card"><div class="profile-top"><span class="avatar large">AS</span><button aria-label="More actions">•••</button></div><h3>Alex Smith</h3><p>Support manager · Acme Inc.</p><div class="profile-stats"><span><b>24</b>Open</span><span><b>92%</b>CSAT</span><span><b>4.9</b>Rating</span></div></article>
+            <article class="activity-card" id="knowledge"><header><div><span class="eyebrow">KNOWLEDGE BASE</span><h3>Content health</h3></div><span class="health">● Healthy</span></header><div class="progress-row"><div><span>Articles indexed</span><b>128 / 128</b></div><div class="progress"><i></i></div></div><div class="activity-divider"></div><p class="recent-label">RECENT ACTIVITY</p><ul><li><span class="activity-dot blue-dot"></span><p><b>AI assistant activated</b><small>Ready to answer customer questions</small></p><time>Now</time></li><li><span class="activity-dot violet-dot"></span><p><b>Knowledge base synced</b><small>128 articles are available</small></p><time>2h</time></li></ul></article>
+          </aside>
+        </section>
+      </main>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
