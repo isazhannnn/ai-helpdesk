@@ -79,6 +79,54 @@ class FeedbackRequest(BaseModel):
     helpful: bool
 
 
+KAZAKH_LETTERS = set("әғқңөұүһі")
+RUSSIAN_WORDS = re.compile(
+    r"\b(?:привет|здравствуйте|что|ты|умеешь|можешь|как|тебя|зовут|я|мне|"
+    r"пожалуйста|где|мой|заказ|полис|страховка)\b",
+    flags=re.IGNORECASE,
+)
+CAPABILITIES_PHRASES = (
+    "что ты умеешь", "что умеешь", "что ты можешь", "что можешь", "кто ты", "как тебя зовут",
+    "не істей аласың", "не істейсің", "не істейсіз", "не істей аласын", "сен кімсің", "атың кім",
+)
+
+
+def detect_reply_language(message: str) -> str:
+    """Return the language mode of the whole message, never its final word."""
+    normalized = message.casefold()
+    has_kazakh = any(letter in normalized for letter in KAZAKH_LETTERS)
+    has_russian = bool(RUSSIAN_WORDS.search(normalized))
+    if has_kazakh and has_russian:
+        return "mixed"
+    return "kk" if has_kazakh else "ru"
+
+
+def assistant_intro_reply(message: str) -> str | None:
+    """Answer identity and capabilities questions before insurance scenario routing."""
+    normalized = message.casefold()
+    if not any(phrase in normalized for phrase in CAPABILITIES_PHRASES):
+        return None
+
+    language = detect_reply_language(message)
+    if language == "kk":
+        return (
+            "Сәлем! Мен — Гелия, AI-көмекшімін. Сақтандыру полисін рәсімдеуге немесе "
+            "ұзартуға, бағасын есептеуге, төлем, өтініш және оның мәртебесі бойынша бағыт беруге көмектесемін. "
+            "Сұрағыңызды жазыңыз немесе дауыспен айтыңыз."
+        )
+    if language == "mixed":
+        return (
+            "Сәлем! Мен — Гелия, AI-көмекшімін. Я могу помочь оформить или продлить полис, "
+            "рассчитать стоимость, разобраться с оплатой, заявлением и статусом обращения. "
+            "Сұрағыңызды жазыңыз немесе голосом айтыңыз — бірге шешеміз."
+        )
+    return (
+        "Здравствуйте! Я Гелия, AI-помощник по страхованию. Помогу оформить или продлить полис, "
+        "рассчитать стоимость, разобраться с оплатой, заявлением и статусом обращения. "
+        "Напишите вопрос или скажите его голосом."
+    )
+
+
 def generate_ai_reply(history: list[dict[str, str]], user: dict[str, str], scenario: dict[str, object]) -> str:
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -281,16 +329,33 @@ def chat(payload: ChatRequest, user: dict[str, str] = Depends(current_user)) -> 
     save_message(conversation_id, "user", message)
     started_at = perf_counter()
     history = [{"role": item["role"], "content": item["content"]} for item in get_messages(conversation_id)]
-    decision, routing_latency_ms = route_conversation(history)
-    scenario = dict(selected_scenario(str(decision["scenario_id"])))
-    reply_language = str(decision["reply_language"])
-    scenario["reply_language"] = reply_language
+    reply = assistant_intro_reply(message)
+    if reply:
+        reply_language = detect_reply_language(message)
+        decision = {
+            "scenario_id": "INFO",
+            "confidence": 100,
+            "reason": "Assistant capabilities question",
+            "language": reply_language,
+            "reply_language": reply_language,
+            "alternative_ids": [],
+            "missing_slots": [],
+            "topic_switched": False,
+        }
+        scenario_name = "Assistant capabilities"
+        routing_latency_ms = 0
+    else:
+        decision, routing_latency_ms = route_conversation(history)
+        scenario = dict(selected_scenario(str(decision["scenario_id"])))
+        reply_language = str(decision["reply_language"])
+        scenario["reply_language"] = reply_language
+        scenario_name = str(scenario["name"])
+        reply = generate_ai_reply(history, user, scenario)
     record_route(conversation_id, user["id"], decision, routing_latency_ms)
-    reply = generate_ai_reply(history, user, scenario)
     latency_ms = round((perf_counter() - started_at) * 1000)
     assistant_message_id = save_message(conversation_id, "assistant", reply)
     record_ai_response(assistant_message_id, conversation_id, user["id"], latency_ms)
-    route = {"scenario_id": decision["scenario_id"], "scenario_name": scenario["name"], "confidence": decision["confidence"],
+    route = {"scenario_id": decision["scenario_id"], "scenario_name": scenario_name, "confidence": decision["confidence"],
              "reason": decision["reason"], "alternatives": decision["alternative_ids"], "routing_latency_ms": routing_latency_ms,
              "language": decision["language"], "reply_language": decision["reply_language"], "topic_switched": decision["topic_switched"]}
     return ChatResponse(conversation_id=conversation_id, reply=reply, assistant_message_id=assistant_message_id, route=route)

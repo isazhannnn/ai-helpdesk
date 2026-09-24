@@ -54,6 +54,28 @@ def test_chat_requires_authentication(tmp_path, monkeypatch):
     assert response.status_code == 401
 
 
+def test_capabilities_question_is_answered_without_scenario_routing(tmp_path, monkeypatch):
+    monkeypatch.setattr("backend.database.DATABASE_PATH", tmp_path / "test.db")
+    monkeypatch.setattr("backend.main.route_conversation", lambda history: (_ for _ in ()).throw(AssertionError("must not route")))
+    with TestClient(app) as client:
+        register(client)
+        response = client.post("/api/chat", json={"message": "Сәлем, сен не істей аласың?"})
+    assert response.status_code == 200
+    assert response.json()["route"]["scenario_id"] == "INFO"
+    assert "Гелия" in response.json()["reply"]
+    assert "сақтандыру" in response.json()["reply"].casefold()
+
+
+def test_mixed_capabilities_question_gets_mixed_reply(tmp_path, monkeypatch):
+    monkeypatch.setattr("backend.database.DATABASE_PATH", tmp_path / "test.db")
+    with TestClient(app) as client:
+        register(client)
+        response = client.post("/api/chat", json={"message": "Сәлем! Что ты умеешь?"})
+    assert response.status_code == 200
+    assert "Я могу" in response.json()["reply"]
+    assert "Сұрағыңызды" in response.json()["reply"]
+
+
 def test_voice_output_requires_authentication(tmp_path, monkeypatch):
     monkeypatch.setattr("backend.database.DATABASE_PATH", tmp_path / "test.db")
     with TestClient(app) as client:
