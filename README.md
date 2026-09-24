@@ -1,134 +1,114 @@
 # AI Helpdesk
 
-<p align="center">A polished, self-hosted customer support dashboard powered by FastAPI, SQLite, and the OpenAI API.</p>
+<p align="center">
+  <strong>Голосовой AI-помощник для страховой поддержки</strong><br>
+  Клиент говорит или пишет так, как ему удобно, а ассистент помогает быстро понять вопрос и следующий шаг.
+</p>
 
-<p align="center"><a href="#quick-start">Quick start</a> · <a href="#api">API</a> · <a href="#development">Development</a></p>
+<p align="center">
+  <a href="#что-это">Что это</a> ·
+  <a href="#как-пользоваться">Как пользоваться</a> ·
+  <a href="#интерфейс">Интерфейс</a> ·
+  <a href="#запуск">Запуск</a>
+</p>
 
 ![AI Helpdesk hero banner](docs/images/hero-banner-v2.png)
 
-## Overview
+## Что это
 
-AI Helpdesk is a compact, production-minded portfolio project for teams that want a clean support experience without a heavy frontend stack. It provides a premium dark dashboard, a persistent AI chat, and a documented REST API.
+**AI Helpdesk** — единое место для диалога со страховой поддержкой. Здесь можно спросить о полисе, оплате, заявлении или статусе обращения голосом либо текстом. Гелия понимает русский, казахский и естественную смесь двух языков, сохраняет контекст беседы и отвечает на языке обращения.
 
-## Interface
+Это удобно, когда нужно не искать нужный раздел вручную, а просто объяснить ситуацию человеческими словами.
 
-![AI Helpdesk live conversation dashboard](docs/images/dashboard-conversation-v2.png)
+## Что умеет Гелия
 
-## Features
+- Подсказывает, как оформить или продлить страховой полис.
+- Помогает с расчётом стоимости и вопросами по оплате.
+- Принимает вопросы по заявлению, ДТП и статусу обращения.
+- Понимает русский, қазақша и смешанную речь.
+- Отвечает текстом и может озвучить ответ.
+- Помнит сообщения в текущем диалоге, поэтому вопрос можно уточнять без повторения всей истории.
 
-- Responsive premium SaaS dashboard built with vanilla HTML, CSS, and JavaScript.
-- Conversation history persisted locally in SQLite.
-- OpenAI-powered replies using the official Python SDK and Responses API.
-- Friendly validation and error messages when input, connectivity, or configuration needs attention.
-- New conversations, health checks, Swagger documentation, Docker Compose, and API tests.
+Примеры, с которых можно начать:
 
-## Tech stack
+> «Как продлить полис?»
 
-| Area | Technology |
+> «Сақтандыру бағасын есептеп бере аласыз ба?»
+
+> «Мен полиске төледім, но оплата ещё не отобразилась.»
+
+> «Что ты умеешь делать?»
+
+## Как пользоваться
+
+1. Откройте AI Helpdesk и войдите в свой профиль.
+2. Нажмите **«Новый диалог»**.
+3. Напишите сообщение или нажмите на значок микрофона и произнесите вопрос.
+4. Говорите естественно: можно на русском, казахском или смешивая языки.
+5. Прочитайте или прослушайте ответ Гелии.
+6. Если нужно уточнить детали или сменить тему, продолжайте тот же диалог.
+7. Оцените ответ кнопкой «Да» или «Нет» — это помогает замечать сложные обращения.
+
+## Интерфейс
+
+![AI Helpdesk dashboard](docs/images/interface-dashboard.png)
+
+### Структура рабочего пространства
+
+| Раздел | Для чего он нужен |
 | --- | --- |
-| API | Python, FastAPI, Uvicorn |
-| AI | Official OpenAI Python SDK, Responses API |
-| Data | SQLite |
-| Frontend | HTML, CSS, JavaScript |
-| Testing | Pytest, FastAPI TestClient |
-| Delivery | Docker, Docker Compose |
+| **Панель управления** | Быстрый обзор текущих диалогов и работы ассистента. |
+| **Чаты** | Здесь проходят разговоры с Гелией и хранится история обращений. |
+| **База знаний** | Материалы, по которым ассистент ориентируется в типовых вопросах. |
+| **Аналитика** | Оценка скорости ответов и полезности диалогов. |
+| **Отслеживание разговора** | Понятный путь обработки конкретного обращения. |
+| **Настройки** | Управление профилем и рабочим пространством. |
 
-## Project structure
+## Полезные сценарии
 
-```text
-.
-├── backend/             # FastAPI routes, OpenAI service, SQLite access
-├── frontend/            # Responsive dashboard UI
-├── tests/               # API tests
-├── docs/                # Architecture notes and visual assets
-├── .env.example         # Safe environment-variable template
-├── Dockerfile
-├── docker-compose.yml
-└── requirements.txt
-```
+### Хочу оформить или продлить полис
 
-## Quick start
+Скажите, какой полис вам нужен и для чего он нужен. Гелия уточнит недостающие детали и подскажет дальнейшие действия.
 
-### Docker
+### Не проходит оплата
 
-```bash
-cp .env.example .env
-# Add your OpenAI API key to .env
+Напишите, когда совершили оплату и что отображается сейчас. Не отправляйте в чат полные данные банковской карты.
+
+### Нужно сообщить о ДТП или подать заявление
+
+Опишите, что произошло, где и когда. Если кому-то нужна срочная медицинская или экстренная помощь, сначала обратитесь в службу 112.
+
+### Нужна помощь на двух языках
+
+Не переключайте настройки вручную. Например: «Менің полисім бар, но не понимаю, как его продлить» — ассистент поддержит такой формат разговора.
+
+## Запуск
+
+Для работы локально подготовьте файл `.env` по примеру `.env.example` и добавьте ключ OpenAI. Затем выберите удобный способ запуска.
+
+### Через Docker
+
+```powershell
+Copy-Item .env.example .env
 docker compose up --build
 ```
 
-Open [http://localhost:8000](http://localhost:8000). API docs are available at [http://localhost:8000/docs](http://localhost:8000/docs).
+### Локально через Python
 
-### Local development
-
-```bash
+```powershell
 python -m venv venv
-# Windows PowerShell
-venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-copy .env.example .env
+Copy-Item .env.example .env
 uvicorn backend.main:app --reload
 ```
 
-## Environment configuration
+После запуска откройте [http://localhost:8000](http://localhost:8000).
 
-Create `.env` from `.env.example` and add a key created in your OpenAI account:
+## Конфиденциальность
 
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4o-mini
-```
+Не публикуйте файл `.env` и ключ доступа. Не отправляйте в чат пароли, полные реквизиты банковских карт и другую чувствительную информацию.
 
-The server reads credentials only from environment variables. If the key is missing, `/api/chat` returns a clear `503` response while the dashboard and health endpoint remain available. The implementation follows the official OpenAI Python SDK pattern for `client.responses.create`; see the [OpenAI API quickstart](https://developers.openai.com/api/docs/quickstart).
+## Лицензия
 
-## API
-
-### `GET /health`
-
-```json
-{ "status": "ok" }
-```
-
-### `POST /api/chat`
-
-```bash
-curl -X POST http://localhost:8000/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message":"How do I update my billing details?"}'
-```
-
-```json
-{
-  "conversation_id": "b7a23c69-5531-4bdf-9ece-1bb71fb20e1c",
-  "reply": "..."
-}
-```
-
-`POST /api/conversations` creates an empty conversation. `GET /api/dashboard` returns lightweight local dashboard metrics. Explore all routes at `/docs`.
-
-## Development
-
-```bash
-pytest
-```
-
-The SQLite database is created automatically at `data/helpdesk.db`. It is intentionally excluded from Git.
-
-## Security
-
-- Never commit `.env` or a real API key.
-- `.env.example` contains placeholders only.
-- The API key stays on the server; the browser never receives it.
-- OpenAI requests use `store=False`, and the application keeps local conversation history in SQLite.
-
-## Future improvements
-
-- Authentication and workspace-level authorization.
-- Streaming responses and agent handoff rules.
-- Knowledge-base retrieval with citations.
-- Conversation list, filtering, and export.
-- Observability, rate limiting, and deployment automation.
-
-## License
-
-Distributed under the [MIT License](LICENSE).
+Проект распространяется по лицензии [MIT](LICENSE).
